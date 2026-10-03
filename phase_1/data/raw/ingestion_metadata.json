@@ -1,0 +1,59 @@
+{
+  "dataset_id": "ManikaSaini/zomato-restaurant-recommendation",
+  "ingested_at": "2026-10-02T17:32:57.112928+00:00",
+  "file_name": "zomato_raw.parquet",
+  "file_size_bytes": 147827245,
+  "file_size_mb": 140.98,
+  "sha256": "324dc3c26bf06e36068e4f53c8299a78ae8d341663a3b276a0fa5387a1ccdeda",
+  "total_rows": 51717,
+  "total_columns": 17,
+  "columns": [
+    "url",
+    "address",
+    "name",
+    "online_order",
+    "book_table",
+    "rate",
+    "votes",
+    "phone",
+    "location",
+    "rest_type",
+    "dish_liked",
+    "cuisines",
+    "approx_cost(for two people)",
+    "reviews_list",
+    "menu_item",
+    "listed_in(type)",
+    "listed_in(city)"
+  ],
+  "source_urls": [
+    "https://huggingface.co/api/datasets/ManikaSaini/zomato-restaurant-recommendation/parquet/default/train/0.parquet",
+    "https://huggingface.co/api/datasets/ManikaSaini/zomato-restaurant-recommendation/parquet/default/train/1.parquet"
+  ],
+  "validation": {
+    "is_valid": true,
+    "row_count": 51717,
+    "column_count": 17,
+    "missing_columns": [],
+    "null_counts": {
+      "url": 0,
+      "address": 0,
+      "name": 0,
+      "online_order": 0,
+      "book_table": 0,
+      "rate": 7775,
+      "votes": 0,
+      "phone": 1208,
+      "location": 21,
+      "rest_type": 227,
+      "dish_liked": 28078,
+      "cuisines": 45,
+      "approx_cost(for two people)": 346,
+      "reviews_list": 0,
+      "menu_item": 0,
+      "listed_in(type)": 0,
+      "listed_in(city)": 0
+    },
+    "errors": []
+  }
+}

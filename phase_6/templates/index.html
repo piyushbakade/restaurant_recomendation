@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="AI-Powered Restaurant Concierge for Bangalore. Personalized culinary recommendations based on cuisine, budget, rating, and dining vibe.">
+  <meta name="theme-color" content="#E23744">
+  <title>GourmetAI - Zomato Bangalore Restaurant Recommender</title>
+  
+  <!-- Modern Typography from Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <!-- Ambient background glow effects (Zomato Red & Deep Slate) -->
+  <div class="glow-orb glow-orb-1" aria-hidden="true"></div>
+  <div class="glow-orb glow-orb-2" aria-hidden="true"></div>
+
+  <div class="app-container">
+    <!-- Header -->
+    <header class="hero-header">
+      <div class="brand-badge">
+        <span class="pulse-dot"></span>
+        <span>Bangalore Dining Concierge &middot; Zomato Curated</span>
+      </div>
+      <h1 class="hero-title">
+        Discover Bangalore's Best <span class="gradient-text">Restaurants</span>
+      </h1>
+      <p class="hero-subtitle">
+        Intelligent dining recommendations powered by 12,000+ verified Bangalore venues, multi-factor heuristic ranking, and AI personalization.
+      </p>
+    </header>
+
+    <!-- Main Content Layout (Vertical: Inputs on Top, Recommendations Below) -->
+    <main class="main-layout">
+      <!-- TOP: Search & Preference Control Panel -->
+      <section class="control-panel glass-card" aria-label="Dining Preferences Form">
+        <div class="panel-header">
+          <div class="panel-title-group">
+            <span class="brand-tag">🍽️ GOURMET AI</span>
+            <h2 class="panel-title">Set Your Dining Preferences</h2>
+          </div>
+          <span class="badge badge-zomato">Live AI Concierge</span>
+        </div>
+
+        <form id="recommendation-form" class="preferences-form" novalidate>
+          <!-- Grid Row 1: Location on Left, Budget & Rating on Right -->
+          <div class="form-grid-row">
+            <!-- 1. Location Input & Quick Chips -->
+            <div class="form-group form-col-location">
+              <label for="location-input" class="form-label">
+                <span>Location / Neighborhood <span class="required">*</span></span>
+                <span class="field-hint">Bangalore locality</span>
+              </label>
+              <div class="input-wrapper">
+                <span class="input-icon" aria-hidden="true">📍</span>
+                <input
+                  type="text"
+                  id="location-input"
+                  name="location"
+                  class="form-control"
+                  placeholder="e.g. Koramangala, Indiranagar, Whitefield, Church Street..."
+                  value=""
+                  required
+                  autocomplete="off"
+                >
+              </div>
+              <!-- Popular Hub Chips -->
+              <div class="chips-container" id="location-chips" aria-label="Popular Locations">
+                <span class="chips-label">Popular:</span>
+                <button type="button" class="chip" data-location="Koramangala">Koramangala</button>
+                <button type="button" class="chip" data-location="Indiranagar">Indiranagar</button>
+                <button type="button" class="chip" data-location="Whitefield">Whitefield</button>
+                <button type="button" class="chip" data-location="HSR Layout">HSR Layout</button>
+                <button type="button" class="chip" data-location="Church Street">Church St</button>
+                <button type="button" class="chip" data-location="Jayanagar">Jayanagar</button>
+              </div>
+            </div>
+
+            <!-- 2. Budget Slider & Rating Pills -->
+            <div class="form-group form-col-budget-rating">
+              <!-- Budget Slider -->
+              <div class="budget-subgroup">
+                <div class="slider-header">
+                  <label for="budget-slider" class="form-label">
+                    <span>Max Budget for Two</span>
+                  </label>
+                  <div class="budget-badge" id="budget-badge">
+                    <span class="currency">₹</span><span id="budget-value">1,000</span>
+                    <span class="unit">for two</span>
+                  </div>
+                </div>
+                <div class="slider-container">
+                  <input
+                    type="range"
+                    id="budget-slider"
+                    name="budget"
+                    min="200"
+                    max="4000"
+                    step="50"
+                    value="1000"
+                    class="budget-range-input"
+                  >
+                  <div class="slider-ticks" aria-hidden="true">
+                    <span>₹200</span>
+                    <span>₹1,000</span>
+                    <span>₹2,000</span>
+                    <span>₹3,000</span>
+                    <span>₹4,000+</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Rating Pills -->
+              <div class="rating-subgroup">
+                <label class="form-label">
+                  <span>Minimum Rating</span>
+                  <span class="field-hint">Authentic diner reviews</span>
+                </label>
+                <div class="rating-pills" id="rating-pills" role="radiogroup">
+                  <button type="button" class="rating-pill" data-rating="3.0">Any (3.0+ ★)</button>
+                  <button type="button" class="rating-pill" data-rating="3.5">3.5+ ★ Good</button>
+                  <button type="button" class="rating-pill" data-rating="4.0">4.0+ ★ Top Rated</button>
+                  <button type="button" class="rating-pill" data-rating="4.4">4.4+ ★ Exceptional</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Grid Row 2: Desired Cuisines Multi-Select -->
+          <div class="form-group">
+            <label class="form-label">
+              <span>Desired Cuisines</span>
+              <span class="field-hint">Select one or more culinary styles</span>
+            </label>
+            <div class="cuisine-grid" id="cuisine-grid" role="group" aria-label="Cuisine selector">
+              <button type="button" class="cuisine-btn" data-cuisine="Italian">
+                <span class="emoji" aria-hidden="true">🍕</span> Italian
+              </button>
+              <button type="button" class="cuisine-btn" data-cuisine="Pizza">
+                <span class="emoji" aria-hidden="true">🧀</span> Pizza
+              </button>
+              <button type="button" class="cuisine-btn" data-cuisine="North Indian">
+                <span class="emoji" aria-hidden="true">🍛</span> North Indian
+              </button>
+              <button type="button" class="cuisine-btn" data-cuisine="South Indian">
+                <span class="emoji" aria-hidden="true">🍲</span> South Indian
+              </button>
+              <button type="button" class="cuisine-btn" data-cuisine="Chinese">
+                <span class="emoji" aria-hidden="true">🥢</span> Chinese
+              </button>
+              <button type="button" class="cuisine-btn" data-cuisine="Biryani">
+                <span class="emoji" aria-hidden="true">🥘</span> Biryani
+              </button>
+              <button type="button" class="cuisine-btn" data-cuisine="Continental">
+                <span class="emoji" aria-hidden="true">🥗</span> Continental
+              </button>
+              <button type="button" class="cuisine-btn" data-cuisine="Cafe">
+                <span class="emoji" aria-hidden="true">☕</span> Cafe
+              </button>
+              <button type="button" class="cuisine-btn" data-cuisine="Desserts">
+                <span class="emoji" aria-hidden="true">🍰</span> Desserts
+              </button>
+              <button type="button" class="cuisine-btn" data-cuisine="Fast Food">
+                <span class="emoji" aria-hidden="true">🍔</span> Fast Food
+              </button>
+            </div>
+          </div>
+
+          <!-- Grid Row 3: Dining Occasion / Vibe Notes -->
+          <div class="form-group">
+            <label for="vibe-input" class="form-label">
+              <span>Dining Occasion & Atmosphere Notes</span>
+              <span class="field-hint">Custom prompt for personalized AI concierge reasoning</span>
+            </label>
+            <div class="input-wrapper">
+              <span class="input-icon" aria-hidden="true">💬</span>
+              <input
+                type="text"
+                id="vibe-input"
+                name="vibe"
+                class="form-control"
+                placeholder="e.g. cozy corner for a date night, quick office lunch, live music..."
+                value=""
+              >
+            </div>
+            <div class="vibe-suggestions" aria-label="Suggested vibes">
+              <button type="button" class="vibe-chip" data-vibe="romantic date night with cozy seating">🕯️ Romantic Date</button>
+              <button type="button" class="vibe-chip" data-vibe="family get-together with spacious seating">👨‍👩‍👧‍👦 Family Dinner</button>
+              <button type="button" class="vibe-chip" data-vibe="rooftop cocktails and great music with friends">🍸 Rooftop Vibe</button>
+              <button type="button" class="vibe-chip" data-vibe="crispy dosa and filter coffee for morning breakfast">☕ Quick Breakfast</button>
+            </div>
+          </div>
+
+          <!-- Grid Row 4: Action Footer (Checkboxes + Submit CTA) -->
+          <div class="form-footer-row">
+            <div class="flags-group">
+              <label class="checkbox-label" for="online-order-check">
+                <input type="checkbox" id="online-order-check" name="online_order">
+                <span class="checkbox-custom"></span>
+                <span>Online Delivery</span>
+              </label>
+              <label class="checkbox-label" for="book-table-check">
+                <input type="checkbox" id="book-table-check" name="book_table">
+                <span class="checkbox-custom"></span>
+                <span>Table Reservation</span>
+              </label>
+            </div>
+
+            <button type="submit" id="submit-btn" class="submit-btn">
+              <span class="btn-text">Find My Recommendations ✨</span>
+              <span class="btn-spinner" aria-hidden="true"></span>
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- BOTTOM: Suggestions / Recommendations Results Section -->
+      <section class="results-section" aria-live="polite" aria-label="Recommendations Results">
+        <!-- Initial Prompt State (shown before user clicks Find My Recommendations) -->
+        <div id="initial-state" class="initial-prompt-card glass-card">
+          <div class="initial-prompt-icon" aria-hidden="true">🍽️</div>
+          <h3 class="initial-prompt-title">Ready to Discover Bangalore's Best Dining?</h3>
+          <p class="initial-prompt-desc">
+            Choose your preferred neighborhood, set your budget, and select your favorite cuisines above.
+            Then click <strong>Find My Recommendations ✨</strong> to generate AI-curated matches.
+          </p>
+        </div>
+
+        <!-- Results Header Banner (filled dynamically) -->
+        <div id="results-meta-banner" class="results-meta-banner glass-card hidden">
+          <div class="meta-info">
+            <div class="meta-tag">CURATED RECOMMENDATIONS</div>
+            <h3 class="meta-title" id="meta-location-title">Koramangala</h3>
+            <p class="meta-subtitle" id="meta-details">Showing top matches</p>
+          </div>
+          <div class="meta-stats">
+            <span class="stat-pill" id="stat-latency">⚡ 45 ms</span>
+            <span class="stat-pill" id="stat-provider">🤖 AI Concierge</span>
+          </div>
+        </div>
+
+        <!-- Relaxation Alert Banner -->
+        <div id="relaxation-banner" class="relaxation-banner hidden" role="alert">
+          <div class="alert-icon" aria-hidden="true">💡</div>
+          <div class="alert-content">
+            <strong class="alert-title">Expanded Filter Notice</strong>
+            <ul id="relaxation-notes-list" class="alert-list"></ul>
+          </div>
+        </div>
+
+        <!-- Loading Skeleton State -->
+        <div id="loading-state" class="loading-state hidden">
+          <div class="loading-status-box glass-card">
+            <div class="spinner-ring"></div>
+            <p id="loading-status-text" class="loading-status-text">
+              Scanning 12,000+ verified Bangalore restaurants...
+            </p>
+          </div>
+          <div class="skeleton-cards">
+            <div class="skeleton-card glass-card"></div>
+            <div class="skeleton-card glass-card"></div>
+            <div class="skeleton-card glass-card"></div>
+          </div>
+        </div>
+
+        <!-- Recommendations Container (Dynamic Cards Below) -->
+        <div id="recommendations-container" class="recommendations-container">
+          <!-- Populated by JavaScript -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="empty-state" class="empty-state glass-card hidden">
+          <div class="empty-icon" aria-hidden="true">🍽️</div>
+          <h3>No matching restaurants found</h3>
+          <p>Try widening your budget slider or choosing an adjacent neighborhood.</p>
+          <button type="button" id="reset-filters-btn" class="chip">Reset All Filters</button>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>
+        Powered by Zomato Bangalore Dataset & Heuristic Scoring Engine &middot;
+        Vercel Serverless Ready &middot; Anti-Hallucination Verified
+      </p>
+    </footer>
+  </div>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

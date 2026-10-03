@@ -1,0 +1,20 @@
+[project]
+name = "restaurant-recommendation-service"
+version = "0.1.0"
+description = "AI-Powered Restaurant Recommendation Service"
+requires-python = ">=3.11"
+dependencies = [
+    "requests>=2.31.0",
+    "pandas>=2.0.0",
+    "pyarrow>=14.0.0",
+    "tqdm>=4.66.0",
+    "pydantic>=2.5.0",
+    "google-genai>=2.28.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["phase_1/tests", "phase_2/tests", "phase_3/tests", "phase_4/tests", "phase_5/tests", "phase_6/tests", "phase_7/tests", "phase_8/tests"]
+pythonpath = ["."]
+markers = [
+    "integration: marks tests requiring external network access",
+]

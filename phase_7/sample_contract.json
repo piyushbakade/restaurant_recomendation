@@ -1,0 +1,36 @@
+{
+  "status": "success",
+  "query_summary": {
+    "location": "Koramangala",
+    "cuisines": [
+      "Italian"
+    ],
+    "max_budget": 1000,
+    "min_rating": 4.0
+  },
+  "total_candidates_found": 18,
+  "recommendations": [
+    {
+      "restaurant_id": "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
+      "name": "Toscano",
+      "location": "Koramangala 5th Block",
+      "cuisines": [
+        "Italian",
+        "Pizza",
+        "Desserts"
+      ],
+      "price_for_two": 900,
+      "rating": 4.4,
+      "votes": 1280,
+      "popular_dishes": [
+        "Ravioli",
+        "Bruschetta",
+        "Tiramisu"
+      ],
+      "recommendation_reason": "Toscano perfectly matches your \u20b91,000 budget while exceeding your 4.0 rating target with a 4.4 rating. Situated right in Koramangala 5th Block, it is celebrated for authentic wood-fired pizzas and homemade ravioli, making it an ideal Italian dining choice."
+    }
+  ],
+  "meta": {
+    "execution_time_ms": 745
+  }
+}

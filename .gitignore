@@ -1,0 +1,31 @@
+# Virtual Environment
+.venv/
+env/
+venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.tmp
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE
+.vscode/
+.idea/
+
+# Environment variables & secrets (NEVER commit live API keys)
+.env
+.env.*
+!.env.example
+
+# Vercel deployment cache
+.vercel/
+
+# Large raw datasets (>100MB exceeds GitHub file size limit)
+phase_1/data/raw/*.parquet
+phase_1/data/raw/*.csv

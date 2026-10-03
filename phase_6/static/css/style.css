@@ -1,0 +1,1049 @@
+/* ==========================================================================
+   GourmetAI - Zomato Red, Black & White Modern Design System
+   ========================================================================== */
+
+:root {
+  /* Zomato Signature Colors */
+  --zomato-red: #e23744;
+  --zomato-red-dark: #cb202d;
+  --zomato-red-light: #ef4f5f;
+  --zomato-red-glow: rgba(226, 55, 68, 0.25);
+  --zomato-red-soft: rgba(226, 55, 68, 0.12);
+
+  /* Authentic Zomato Rating Green */
+  --zomato-green: #24963f;
+  --zomato-green-soft: rgba(36, 150, 63, 0.18);
+
+  /* Black & Charcoal Shades */
+  --bg-dark: #0e0f14;
+  --bg-darker: #08090c;
+  --bg-card: rgba(22, 24, 33, 0.85);
+  --bg-card-hover: rgba(29, 31, 43, 0.95);
+  --bg-input: rgba(14, 15, 20, 0.7);
+
+  /* Borders */
+  --border-glass: rgba(255, 255, 255, 0.08);
+  --border-card: rgba(255, 255, 255, 0.1);
+  --border-focus: rgba(226, 55, 68, 0.6);
+
+  /* White & Grayscale Typography */
+  --text-main: #ffffff;
+  --text-body: #e2e2ec;
+  --text-muted: #9e9eb0;
+  --text-subtle: #686a7c;
+
+  /* Fonts */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Border Radii */
+  --radius-xs: 6px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-card: 0 10px 30px -10px rgba(0, 0, 0, 0.7), 0 0 1px 1px rgba(255, 255, 255, 0.05);
+  --shadow-red-glow: 0 6px 24px rgba(226, 55, 68, 0.35);
+  --transition-smooth: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-dark);
+  color: var(--text-body);
+  line-height: 1.6;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Ambient glow orbs in Zomato Red and Deep Indigo */
+.glow-orb {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(150px);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.22;
+}
+
+.glow-orb-1 {
+  width: 550px;
+  height: 550px;
+  background: radial-gradient(circle, #e23744 0%, #991b1b 70%);
+  top: -150px;
+  right: -80px;
+}
+
+.glow-orb-2 {
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, #1e1b4b 0%, #0e0f14 70%);
+  bottom: -200px;
+  left: -150px;
+}
+
+/* App Container */
+.app-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 32px 24px 70px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Glass Card */
+.glass-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  transition: var(--transition-smooth);
+}
+
+/* Hero Header */
+.hero-header {
+  text-align: center;
+  margin-bottom: 36px;
+  padding: 10px 0;
+}
+
+.brand-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  background: var(--zomato-red-soft);
+  border: 1px solid rgba(226, 55, 68, 0.35);
+  border-radius: var(--radius-full);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #ffccd0;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--zomato-red);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--zomato-red);
+  animation: pulseRed 2s infinite;
+}
+
+@keyframes pulseRed {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(1.35); }
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.3rem, 4.5vw, 3.5rem);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  color: var(--text-main);
+  margin-bottom: 14px;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #ffffff 0%, #ff808b 40%, #e23744 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle {
+  font-size: 1.08rem;
+  color: var(--text-muted);
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+/* ==========================================================================
+   Main Layout: Vertical (Preferences on TOP, Suggestions BELOW)
+   ========================================================================== */
+
+.main-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+  width: 100%;
+}
+
+/* ==========================================================================
+   TOP SECTION: Preference Control Panel
+   ========================================================================== */
+
+.control-panel {
+  padding: 30px 32px;
+  width: 100%;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-glass);
+}
+
+.panel-title-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-tag {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 4px 10px;
+  border-radius: var(--radius-xs);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: var(--text-main);
+}
+
+.panel-title {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.badge {
+  padding: 5px 12px;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.badge-zomato {
+  background: var(--zomato-red-soft);
+  border: 1px solid rgba(226, 55, 68, 0.4);
+  color: #ffadb3;
+}
+
+/* Form Grid */
+.preferences-form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.form-grid-row {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 32px;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .form-grid-row {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+}
+
+.form-col-budget-rating {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Form Controls */
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 0.88rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--text-main);
+}
+
+.field-hint {
+  font-size: 0.75rem;
+  color: var(--text-subtle);
+  font-weight: 400;
+}
+
+.required {
+  color: var(--zomato-red-light);
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 14px;
+  font-size: 1.1rem;
+  pointer-events: none;
+  opacity: 0.9;
+}
+
+.form-control {
+  width: 100%;
+  padding: 12px 14px 12px 42px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  transition: var(--transition-smooth);
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--zomato-red);
+  box-shadow: 0 0 0 3px rgba(226, 55, 68, 0.25);
+  background: rgba(18, 20, 28, 0.95);
+}
+
+/* Location Chips */
+.chips-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.chips-label {
+  font-size: 0.75rem;
+  color: var(--text-subtle);
+  margin-right: 4px;
+}
+
+.chip {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-glass);
+  color: var(--text-muted);
+  padding: 5px 12px;
+  border-radius: var(--radius-full);
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.chip:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--text-main);
+  transform: translateY(-1px);
+}
+
+.chip.active {
+  background: var(--zomato-red);
+  border-color: var(--zomato-red);
+  color: #ffffff;
+  font-weight: 700;
+  box-shadow: 0 2px 10px rgba(226, 55, 68, 0.4);
+}
+
+/* Budget Slider */
+.slider-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.budget-badge {
+  background: var(--zomato-red-soft);
+  border: 1px solid rgba(226, 55, 68, 0.4);
+  padding: 4px 14px;
+  border-radius: var(--radius-full);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #ffccd0;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.budget-badge .unit {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--text-muted);
+  margin-left: 2px;
+}
+
+.budget-range-input {
+  width: 100%;
+  height: 6px;
+  -webkit-appearance: none;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-full);
+  outline: none;
+}
+
+.budget-range-input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--zomato-red);
+  cursor: pointer;
+  box-shadow: 0 0 14px rgba(226, 55, 68, 0.7);
+  transition: transform 0.12s ease;
+}
+
+.budget-range-input::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+.slider-ticks {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  color: var(--text-subtle);
+  margin-top: 6px;
+}
+
+/* Rating Selector */
+.rating-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.rating-pill {
+  flex: 1;
+  min-width: 85px;
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: center;
+  transition: var(--transition-smooth);
+}
+
+.rating-pill:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-main);
+}
+
+.rating-pill.active {
+  background: var(--zomato-green);
+  border-color: var(--zomato-green);
+  color: #ffffff;
+  font-weight: 700;
+  box-shadow: 0 2px 10px rgba(36, 150, 63, 0.35);
+}
+
+/* Cuisine Grid */
+.cuisine-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.cuisine-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.cuisine-btn:hover {
+  background: rgba(255, 255, 255, 0.09);
+  color: var(--text-main);
+}
+
+.cuisine-btn.active {
+  background: var(--zomato-red-soft);
+  border-color: var(--zomato-red);
+  color: #ffffff;
+  font-weight: 700;
+}
+
+/* Vibe Suggestions */
+.vibe-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.vibe-chip {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-glass);
+  color: var(--text-subtle);
+  padding: 5px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.vibe-chip:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-main);
+}
+
+/* Form Footer Row */
+.form-footer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-glass);
+}
+
+.flags-group {
+  display: flex;
+  gap: 20px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.checkbox-label input {
+  display: none;
+}
+
+.checkbox-custom {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 1px solid var(--border-glass);
+  background: var(--bg-input);
+  display: inline-block;
+  position: relative;
+  transition: var(--transition-smooth);
+}
+
+.checkbox-label input:checked + .checkbox-custom {
+  background: var(--zomato-red);
+  border-color: var(--zomato-red);
+}
+
+.checkbox-label input:checked + .checkbox-custom::after {
+  content: "✔";
+  position: absolute;
+  top: -2px;
+  left: 2px;
+  font-size: 12px;
+  color: #fff;
+  font-weight: 900;
+}
+
+/* Submit Button in Zomato Red */
+.submit-btn {
+  padding: 14px 28px;
+  background: linear-gradient(135deg, #ef4f5f 0%, #e23744 50%, #cb202d 100%);
+  border: none;
+  border-radius: var(--radius-md);
+  color: #ffffff;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--shadow-red-glow);
+  transition: var(--transition-smooth);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(226, 55, 68, 0.55);
+  background: linear-gradient(135deg, #ff6070 0%, #e23744 100%);
+}
+
+.submit-btn:active {
+  transform: translateY(0);
+}
+
+.btn-spinner {
+  display: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.submit-btn.loading .btn-text {
+  opacity: 0.7;
+}
+
+.submit-btn.loading .btn-spinner {
+  display: inline-block;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ==========================================================================
+   BOTTOM SECTION: Suggestions / Recommendations
+   ========================================================================== */
+
+.results-section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+}
+
+.results-meta-banner {
+  padding: 20px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-left: 4px solid var(--zomato-red);
+}
+
+.meta-tag {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--zomato-red-light);
+  margin-bottom: 2px;
+}
+
+.meta-title {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.meta-subtitle {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.meta-stats {
+  display: flex;
+  gap: 10px;
+}
+
+.stat-pill {
+  font-size: 0.78rem;
+  padding: 5px 12px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-full);
+  color: var(--text-body);
+}
+
+/* Relaxation Alert Banner */
+.relaxation-banner {
+  background: rgba(226, 55, 68, 0.08);
+  border: 1px solid rgba(226, 55, 68, 0.35);
+  border-radius: var(--radius-md);
+  padding: 16px 22px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.alert-icon {
+  font-size: 1.4rem;
+}
+
+.alert-title {
+  display: block;
+  font-size: 0.9rem;
+  color: #ffadb3;
+  margin-bottom: 6px;
+}
+
+.alert-list {
+  list-style: none;
+  font-size: 0.85rem;
+  color: #ffd6d9;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.alert-list li::before {
+  content: "• ";
+  color: var(--zomato-red);
+}
+
+/* Loading Skeleton */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.loading-status-box {
+  padding: 24px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+
+.spinner-ring {
+  width: 26px;
+  height: 26px;
+  border: 3px solid rgba(226, 55, 68, 0.2);
+  border-top-color: var(--zomato-red);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+
+.loading-status-text {
+  font-weight: 600;
+  color: #ffccd0;
+}
+
+.skeleton-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 24px;
+}
+
+.skeleton-card {
+  height: 240px;
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    transparent 100%
+  );
+  animation: shimmer 1.6s infinite;
+}
+
+@keyframes shimmer {
+  100% { transform: translateX(100%); }
+}
+
+/* ==========================================================================
+   Recommendations Container & Restaurant Cards
+   ========================================================================== */
+
+.recommendations-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 24px;
+}
+
+@media (max-width: 768px) {
+  .recommendations-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+.restaurant-card {
+  padding: 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: var(--transition-smooth);
+}
+
+.restaurant-card:hover {
+  background: var(--bg-card-hover);
+  border-color: rgba(226, 55, 68, 0.35);
+  transform: translateY(-3px);
+  box-shadow: 0 16px 36px -12px rgba(0, 0, 0, 0.8), 0 0 20px rgba(226, 55, 68, 0.15);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.card-title-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.rank-badge {
+  background: linear-gradient(135deg, #ef4f5f, #e23744);
+  color: #ffffff;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.85rem;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(226, 55, 68, 0.4);
+}
+
+.restaurant-name {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-main);
+  letter-spacing: -0.01em;
+}
+
+.card-locality {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.cluster-tag {
+  color: #ffadb3;
+  font-weight: 500;
+}
+
+.card-metrics {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.metric-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+/* Authentic Zomato Rating Badge */
+.metric-rating {
+  background: var(--zomato-green);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(36, 150, 63, 0.3);
+}
+
+.metric-votes {
+  font-size: 0.72rem;
+  opacity: 0.85;
+  font-weight: 400;
+}
+
+.metric-cost {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-glass);
+  color: var(--text-main);
+  font-weight: 600;
+}
+
+/* Cuisine tags */
+.cuisine-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.cuisine-tag {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-glass);
+  padding: 3px 10px;
+  border-radius: var(--radius-xs);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+/* AI Recommendation Box in Zomato Red accent */
+.ai-recommendation-box {
+  background: linear-gradient(145deg, rgba(226, 55, 68, 0.07) 0%, rgba(26, 27, 36, 0.6) 100%);
+  border: 1px solid rgba(226, 55, 68, 0.25);
+  border-left: 3px solid var(--zomato-red);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ai-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #ffadb3;
+}
+
+.ai-reason-text {
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: #f3f4f6;
+}
+
+/* Signatures */
+.signatures-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+}
+
+.signatures-label {
+  color: var(--text-subtle);
+  font-weight: 500;
+}
+
+.dish-pill {
+  background: rgba(255, 255, 255, 0.06);
+  padding: 2px 8px;
+  border-radius: var(--radius-xs);
+  color: var(--text-muted);
+}
+
+/* Card Actions */
+.card-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 10px;
+  border-top: 1px solid var(--border-glass);
+}
+
+.action-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--zomato-red-light);
+  text-decoration: none;
+  transition: var(--transition-smooth);
+}
+
+.action-link:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+/* Initial Prompt Card (Before User Searches) */
+.initial-prompt-card {
+  padding: 56px 28px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  border: 1px dashed rgba(226, 55, 68, 0.35);
+  background: linear-gradient(180deg, rgba(22, 24, 33, 0.6) 0%, rgba(14, 15, 20, 0.8) 100%);
+}
+
+.initial-prompt-icon {
+  font-size: 3rem;
+  margin-bottom: 4px;
+  filter: drop-shadow(0 0 16px rgba(226, 55, 68, 0.4));
+  animation: pulseGentle 3s ease-in-out infinite;
+}
+
+@keyframes pulseGentle {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+.initial-prompt-title {
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.initial-prompt-desc {
+  color: var(--text-muted);
+  max-width: 580px;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.initial-prompt-desc strong {
+  color: #ffccd0;
+}
+
+/* Empty State */
+.empty-state {
+  padding: 48px 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.empty-icon {
+  font-size: 3rem;
+  margin-bottom: 8px;
+}
+
+/* Footer */
+.app-footer {
+  text-align: center;
+  padding: 36px 0 10px;
+  font-size: 0.8rem;
+  color: var(--text-subtle);
+}
+
+/* Utility */
+.hidden {
+  display: none !important;
+}
