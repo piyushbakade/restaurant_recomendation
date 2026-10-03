@@ -108,7 +108,7 @@ class handler(BaseHTTPRequestHandler):
         max_budget = data.get("max_budget", 1000)
         min_rating = data.get("min_rating", 3.8)
         vibe_or_notes = data.get("vibe_or_notes")
-        top_k = min(max(int(data.get("top_k", 5)), 1), 20)
+        top_k = min(max(int(data.get("top_k", 30)), 1), 50)
         provider_override = data.get("provider")
 
         query_payload = {

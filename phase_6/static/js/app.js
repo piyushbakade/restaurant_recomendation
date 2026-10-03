@@ -1,9 +1,10 @@
 /**
  * GourmetAI - Interactive Frontend Reactivity & API Integration
+ * Supports Top Picks view, All Recommendations view, and Max 6 per Page Pagination.
  */
 
 document.addEventListener("DOMContentLoaded", () => {
-  // DOM Elements
+  // DOM Elements - Inputs
   const form = document.getElementById("recommendation-form");
   const submitBtn = document.getElementById("submit-btn");
   const locationInput = document.getElementById("location-input");
@@ -17,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const onlineOrderCheck = document.getElementById("online-order-check");
   const bookTableCheck = document.getElementById("book-table-check");
 
-  // Output Elements
+  // DOM Elements - Outputs & States
   const initialState = document.getElementById("initial-state");
   const resultsMetaBanner = document.getElementById("results-meta-banner");
   const metaLocationTitle = document.getElementById("meta-location-title");
@@ -32,7 +33,25 @@ document.addEventListener("DOMContentLoaded", () => {
   const emptyState = document.getElementById("empty-state");
   const resetFiltersBtn = document.getElementById("reset-filters-btn");
 
+  // DOM Elements - View Controls & Pagination
+  const viewControlsBar = document.getElementById("view-controls-bar");
+  const tabTopPicks = document.getElementById("tab-top-picks");
+  const tabAllOptions = document.getElementById("tab-all-options");
+  const badgeTopCount = document.getElementById("badge-top-count");
+  const badgeTotalCount = document.getElementById("badge-total-count");
+  const pageItemRange = document.getElementById("page-item-range");
+  const pageTotalItems = document.getElementById("page-total-items");
+  const paginationContainer = document.getElementById("pagination-container");
+  const prevPageBtn = document.getElementById("prev-page-btn");
+  const nextPageBtn = document.getElementById("next-page-btn");
+  const paginationNumbers = document.getElementById("pagination-numbers");
+
+  // Application State
   let activeRating = null;
+  let allRecommendations = [];
+  let currentViewMode = "top"; // "top" (first view) or "all" (paginated view)
+  let currentPage = 1;
+  const PAGE_SIZE = 6; // Strictly maximum 6 options per page
 
   // 1. Location Chips Toggle
   locationChips.forEach((chip) => {
@@ -106,15 +125,61 @@ document.addEventListener("DOMContentLoaded", () => {
       vibeInput.value = "";
       onlineOrderCheck.checked = false;
       bookTableCheck.checked = false;
+      allRecommendations = [];
+      currentPage = 1;
+      currentViewMode = "top";
       recommendationsContainer.innerHTML = "";
       resultsMetaBanner.classList.add("hidden");
+      if (viewControlsBar) viewControlsBar.classList.add("hidden");
+      if (paginationContainer) paginationContainer.classList.add("hidden");
       relaxationBanner.classList.add("hidden");
       emptyState.classList.add("hidden");
       if (initialState) initialState.classList.remove("hidden");
     });
   }
 
-  // 7. Form Submit Handler
+  // 7. View Mode Tabs Toggle (Top Picks vs All Recommendations)
+  if (tabTopPicks) {
+    tabTopPicks.addEventListener("click", () => {
+      if (currentViewMode !== "top") {
+        currentViewMode = "top";
+        currentPage = 1;
+        renderCurrentView(false);
+      }
+    });
+  }
+
+  if (tabAllOptions) {
+    tabAllOptions.addEventListener("click", () => {
+      if (currentViewMode !== "all") {
+        currentViewMode = "all";
+        currentPage = 1;
+        renderCurrentView(false);
+      }
+    });
+  }
+
+  // 8. Pagination Previous / Next Buttons
+  if (prevPageBtn) {
+    prevPageBtn.addEventListener("click", () => {
+      if (currentPage > 1) {
+        currentPage--;
+        renderCurrentView(true);
+      }
+    });
+  }
+
+  if (nextPageBtn) {
+    nextPageBtn.addEventListener("click", () => {
+      const totalPages = Math.ceil(allRecommendations.length / PAGE_SIZE);
+      if (currentPage < totalPages) {
+        currentPage++;
+        renderCurrentView(true);
+      }
+    });
+  }
+
+  // 9. Form Submit Handler
   form.addEventListener("submit", (e) => {
     e.preventDefault();
     executeSearch();
@@ -126,6 +191,8 @@ document.addEventListener("DOMContentLoaded", () => {
     loadingState.classList.remove("hidden");
     recommendationsContainer.innerHTML = "";
     resultsMetaBanner.classList.add("hidden");
+    if (viewControlsBar) viewControlsBar.classList.add("hidden");
+    if (paginationContainer) paginationContainer.classList.add("hidden");
     relaxationBanner.classList.add("hidden");
     emptyState.classList.add("hidden");
     submitBtn.classList.add("loading");
@@ -133,7 +200,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const steps = [
       "Scanning 12,000+ verified Bangalore restaurants...",
       "Applying budget & multi-factor heuristic ranking...",
-      "AI Concierge generating personalized recommendations...",
+      "AI Concierge curating top matches & all options...",
     ];
 
     let stepIdx = 0;
@@ -171,7 +238,7 @@ document.addEventListener("DOMContentLoaded", () => {
       vibe_or_notes: vibeInput.value.trim() || undefined,
       online_order_only: onlineOrderCheck.checked,
       book_table_only: bookTableCheck.checked,
-      top_k: 5,
+      top_k: 30, // Request up to 30 ranked matches so user can browse all options
     };
 
     const loadingTimer = runLoadingSequence();
@@ -205,14 +272,16 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderResults(data) {
     const { recommendations, query_summary, total_candidates_found, was_relaxed, relaxation_notes, meta, provider_used } = data;
 
-    let isInitialLoad = false;
+    allRecommendations = recommendations || [];
+    currentViewMode = "top";
+    currentPage = 1;
 
     // 1. Meta Banner
     resultsMetaBanner.classList.remove("hidden");
     metaLocationTitle.textContent = `${query_summary.location || "Bangalore"} (${query_summary.cluster || "Metro"})`;
-    metaDetails.textContent = `Showing top ${recommendations.length} of ${total_candidates_found} candidates found`;
+    metaDetails.textContent = `Showing curated recommendations from ${total_candidates_found} candidates found`;
     statLatency.textContent = `⚡ ${meta?.execution_time_ms || 45} ms`;
-    statProvider.textContent = `🤖 ${provider_used === "GeminiProvider" ? "Gemini 2.5 Flash" : "AI Concierge"}`;
+    statProvider.textContent = `🤖 ${provider_used === "GeminiProvider" ? "Gemini 3.5 Flash" : "AI Concierge"}`;
 
     // Smoothly scroll down to suggestions so user immediately sees results
     setTimeout(() => {
@@ -227,81 +296,210 @@ document.addEventListener("DOMContentLoaded", () => {
       relaxationBanner.classList.add("hidden");
     }
 
-    // 3. Render Recommendation Cards
+    // 3. Render Current View with Cards & Pagination
+    renderCurrentView(false);
+  }
+
+  function renderCurrentView(smoothScroll = false) {
     recommendationsContainer.innerHTML = "";
 
-    if (!recommendations || recommendations.length === 0) {
+    if (!allRecommendations || allRecommendations.length === 0) {
       emptyState.classList.remove("hidden");
+      if (viewControlsBar) viewControlsBar.classList.add("hidden");
+      if (paginationContainer) paginationContainer.classList.add("hidden");
       return;
     }
 
-    recommendations.forEach((rec) => {
-      const card = document.createElement("article");
-      card.className = "restaurant-card glass-card";
+    emptyState.classList.add("hidden");
+    if (viewControlsBar) viewControlsBar.classList.remove("hidden");
 
-      const ratingFormatted = rec.rating != null ? rec.rating.toFixed(1) : "New";
-      const votesFormatted = (rec.votes || 0).toLocaleString("en-IN");
-      const priceFormatted = (rec.price_for_two || 0).toLocaleString("en-IN");
+    let listToRender = [];
+    let startIdx = 0;
+    let endIdx = 0;
+    let totalPages = 1;
 
-      // Cuisines pills
-      const cuisinesHtml = (rec.cuisines || [])
-        .map((c) => `<span class="cuisine-tag">${c}</span>`)
-        .join("");
+    const topCount = Math.min(5, allRecommendations.length);
+    if (badgeTopCount) badgeTopCount.textContent = `Top ${topCount}`;
+    if (badgeTotalCount) badgeTotalCount.textContent = `${allRecommendations.length}`;
 
-      // Dishes pills
-      const dishesHtml = (rec.popular_dishes || [])
-        .slice(0, 4)
-        .map((d) => `<span class="dish-pill">${d}</span>`)
-        .join("");
+    if (currentViewMode === "top") {
+      // Top 5 first view
+      listToRender = allRecommendations.slice(0, 5);
+      startIdx = 1;
+      endIdx = listToRender.length;
+      if (pageItemRange) pageItemRange.textContent = `1–${endIdx}`;
+      if (pageTotalItems) pageTotalItems.textContent = `${allRecommendations.length}`;
 
-      // External link
-      const urlHtml = rec.url
-        ? `<a href="${rec.url}" target="_blank" rel="noopener noreferrer" class="action-link">View on Zomato ↗</a>`
-        : "";
+      if (tabTopPicks) {
+        tabTopPicks.classList.add("active");
+        tabTopPicks.setAttribute("aria-selected", "true");
+      }
+      if (tabAllOptions) {
+        tabAllOptions.classList.remove("active");
+        tabAllOptions.setAttribute("aria-selected", "false");
+      }
 
-      card.innerHTML = `
-        <div class="card-header">
-          <div class="card-title-group">
-            <span class="rank-badge" title="Match Rank #${rec.match_rank}">#${rec.match_rank}</span>
-            <div>
-              <h3 class="restaurant-name">${escapeHtml(rec.name)}</h3>
-              <p class="card-locality">📍 ${escapeHtml(rec.location)} &middot; <span class="cluster-tag">${escapeHtml(rec.location_cluster)}</span></p>
-            </div>
-          </div>
-          <div class="card-metrics">
-            <span class="metric-pill metric-rating">★ ${ratingFormatted} <span class="metric-votes">(${votesFormatted})</span></span>
-            <span class="metric-pill metric-cost">₹${priceFormatted} for two</span>
-          </div>
-        </div>
+      // Hide bottom pagination controls when in top picks mode
+      if (paginationContainer) paginationContainer.classList.add("hidden");
+    } else {
+      // All Recommendations View: strictly maximum 6 on each page
+      totalPages = Math.ceil(allRecommendations.length / PAGE_SIZE) || 1;
+      if (currentPage > totalPages) currentPage = totalPages;
+      if (currentPage < 1) currentPage = 1;
 
-        <div class="cuisine-tags">
-          ${cuisinesHtml}
-        </div>
+      const offset = (currentPage - 1) * PAGE_SIZE;
+      listToRender = allRecommendations.slice(offset, offset + PAGE_SIZE);
+      startIdx = offset + 1;
+      endIdx = offset + listToRender.length;
 
-        <div class="ai-recommendation-box">
-          <div class="ai-header">
-            <span aria-hidden="true">✨</span>
-            <span>Why This Matches Your Taste</span>
-          </div>
-          <p class="ai-reason-text">${escapeHtml(rec.recommendation_reason)}</p>
-        </div>
+      if (pageItemRange) pageItemRange.textContent = `${startIdx}–${endIdx}`;
+      if (pageTotalItems) pageTotalItems.textContent = `${allRecommendations.length}`;
 
-        ${
-          dishesHtml
-            ? `<div class="signatures-row">
-                 <span class="signatures-label">Popular Dishes:</span>
-                 ${dishesHtml}
-               </div>`
-            : ""
-        }
+      if (tabAllOptions) {
+        tabAllOptions.classList.add("active");
+        tabAllOptions.setAttribute("aria-selected", "true");
+      }
+      if (tabTopPicks) {
+        tabTopPicks.classList.remove("active");
+        tabTopPicks.setAttribute("aria-selected", "false");
+      }
 
-        <div class="card-footer">
-          ${urlHtml}
-        </div>
-      `;
+      // Render pagination numbers and previous/next controls
+      renderPaginationControls(totalPages);
+    }
 
-      recommendationsContainer.appendChild(card);
+    // Render cards for the active page
+    listToRender.forEach((rec) => {
+      recommendationsContainer.appendChild(createRestaurantCard(rec));
     });
+
+    // In 'top' mode, if there are more than 5 total recommendations, append a friendly "Check all X options" CTA card
+    if (currentViewMode === "top" && allRecommendations.length > 5) {
+      const moreCard = document.createElement("div");
+      moreCard.className = "view-all-cta-card glass-card";
+      moreCard.innerHTML = `
+        <div class="cta-content">
+          <span class="cta-icon" aria-hidden="true">🔍</span>
+          <div>
+            <h4 class="cta-title">Want to explore all options?</h4>
+            <p class="cta-desc">Found <strong>${allRecommendations.length} matching restaurants</strong> for your taste. Browse all options 6 at a time.</p>
+          </div>
+        </div>
+        <button type="button" id="btn-see-all-recommendations" class="cta-browse-btn">
+          Check All ${allRecommendations.length} Options &rarr;
+        </button>
+      `;
+      recommendationsContainer.appendChild(moreCard);
+      const btnSeeAll = moreCard.querySelector("#btn-see-all-recommendations");
+      if (btnSeeAll) {
+        btnSeeAll.addEventListener("click", () => {
+          currentViewMode = "all";
+          currentPage = 1;
+          renderCurrentView(true);
+        });
+      }
+    }
+
+    // Smooth scroll to top of view when navigating pages
+    if (smoothScroll && viewControlsBar) {
+      viewControlsBar.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }
+
+  function renderPaginationControls(totalPages) {
+    if (!paginationContainer) return;
+    if (totalPages <= 1) {
+      paginationContainer.classList.add("hidden");
+      return;
+    }
+
+    paginationContainer.classList.remove("hidden");
+    prevPageBtn.disabled = currentPage === 1;
+    nextPageBtn.disabled = currentPage === totalPages;
+
+    paginationNumbers.innerHTML = "";
+    for (let p = 1; p <= totalPages; p++) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = `page-num-btn ${p === currentPage ? "active" : ""}`;
+      btn.textContent = p;
+      btn.setAttribute("aria-label", `Go to page ${p}`);
+      btn.addEventListener("click", () => {
+        if (currentPage !== p) {
+          currentPage = p;
+          renderCurrentView(true);
+        }
+      });
+      paginationNumbers.appendChild(btn);
+    }
+  }
+
+  function createRestaurantCard(rec) {
+    const card = document.createElement("article");
+    card.className = "restaurant-card glass-card";
+
+    const ratingFormatted = rec.rating != null ? rec.rating.toFixed(1) : "New";
+    const votesFormatted = (rec.votes || 0).toLocaleString("en-IN");
+    const priceFormatted = (rec.price_for_two || 0).toLocaleString("en-IN");
+
+    // Cuisines pills
+    const cuisinesHtml = (rec.cuisines || [])
+      .map((c) => `<span class="cuisine-tag">${escapeHtml(c)}</span>`)
+      .join("");
+
+    // Dishes pills
+    const dishesHtml = (rec.popular_dishes || [])
+      .slice(0, 4)
+      .map((d) => `<span class="dish-pill">${escapeHtml(d)}</span>`)
+      .join("");
+
+    // External link
+    const urlHtml = rec.url
+      ? `<a href="${escapeHtml(rec.url)}" target="_blank" rel="noopener noreferrer" class="action-link">View on Zomato ↗</a>`
+      : "";
+
+    card.innerHTML = `
+      <div class="card-header">
+        <div class="card-title-group">
+          <span class="rank-badge" title="Match Rank #${rec.match_rank}">#${rec.match_rank}</span>
+          <div>
+            <h3 class="restaurant-name">${escapeHtml(rec.name)}</h3>
+            <p class="card-locality">📍 ${escapeHtml(rec.location)} &middot; <span class="cluster-tag">${escapeHtml(rec.location_cluster)}</span></p>
+          </div>
+        </div>
+        <div class="card-metrics">
+          <span class="metric-pill metric-rating">★ ${ratingFormatted} <span class="metric-votes">(${votesFormatted})</span></span>
+          <span class="metric-pill metric-cost">₹${priceFormatted} for two</span>
+        </div>
+      </div>
+
+      <div class="cuisine-tags">
+        ${cuisinesHtml}
+      </div>
+
+      <div class="ai-recommendation-box">
+        <div class="ai-header">
+          <span aria-hidden="true">✨</span>
+          <span>Why This Matches Your Taste</span>
+        </div>
+        <p class="ai-reason-text">${escapeHtml(rec.recommendation_reason)}</p>
+      </div>
+
+      ${
+        dishesHtml
+          ? `<div class="signatures-row">
+               <span class="signatures-label">Popular Dishes:</span>
+               ${dishesHtml}
+             </div>`
+          : ""
+      }
+
+      <div class="card-footer">
+        ${urlHtml}
+      </div>
+    `;
+
+    return card;
   }
 
   function escapeHtml(str) {
@@ -314,4 +512,3 @@ document.addEventListener("DOMContentLoaded", () => {
       .replace(/'/g, "&#039;");
   }
 });
-

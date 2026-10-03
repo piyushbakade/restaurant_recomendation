@@ -252,6 +252,23 @@
           </div>
         </div>
 
+        <!-- View Controls Bar (Top Picks vs All Recommendations Toggle) -->
+        <div id="view-controls-bar" class="view-controls-bar glass-card hidden">
+          <div class="view-mode-tabs" role="tablist" aria-label="Recommendation display options">
+            <button type="button" id="tab-top-picks" class="view-tab active" role="tab" aria-selected="true">
+              <span>⭐ Top Picks</span>
+              <span id="badge-top-count" class="tab-badge">Top 6</span>
+            </button>
+            <button type="button" id="tab-all-options" class="view-tab" role="tab" aria-selected="false">
+              <span>📋 All Recommendations</span>
+              <span id="badge-total-count" class="tab-badge">0</span>
+            </button>
+          </div>
+          <div class="pagination-info" id="pagination-info">
+            Showing <strong id="page-item-range">1–6</strong> of <strong id="page-total-items">0</strong> options
+          </div>
+        </div>
+
         <!-- Loading Skeleton State -->
         <div id="loading-state" class="loading-state hidden">
           <div class="loading-status-box glass-card">
@@ -267,10 +284,23 @@
           </div>
         </div>
 
-        <!-- Recommendations Container (Dynamic Cards Below) -->
+        <!-- Recommendations Container (Dynamic Cards Below - Max 6 per page) -->
         <div id="recommendations-container" class="recommendations-container">
           <!-- Populated by JavaScript -->
         </div>
+
+        <!-- Pagination Controls (Max 6 options per page) -->
+        <nav id="pagination-container" class="pagination-container hidden" aria-label="Recommendations pagination">
+          <button type="button" id="prev-page-btn" class="page-nav-btn" disabled>
+            <span>&larr; Previous</span>
+          </button>
+          <div id="pagination-numbers" class="pagination-numbers">
+            <!-- Dynamic Page Numbers (1, 2, 3...) -->
+          </div>
+          <button type="button" id="next-page-btn" class="page-nav-btn">
+            <span>Next &rarr;</span>
+          </button>
+        </nav>
 
         <!-- Empty State -->
         <div id="empty-state" class="empty-state glass-card hidden">

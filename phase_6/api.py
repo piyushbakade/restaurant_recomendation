@@ -25,7 +25,7 @@ class RecommendationRequest(BaseModel):
     max_budget: Optional[Union[int, str]] = Field(default=1000, description="Budget ceiling in Rupees for two")
     min_rating: Optional[float] = Field(default=3.8, ge=1.0, le=5.0, description="Minimum star rating (1.0 - 5.0)")
     vibe_or_notes: Optional[str] = Field(default=None, max_length=500, description="Dining occasion or atmosphere notes")
-    top_k: Optional[int] = Field(default=5, ge=1, le=20, description="Number of recommendations to return")
+    top_k: Optional[int] = Field(default=30, ge=1, le=50, description="Number of recommendations to return")
     online_order_only: Optional[bool] = Field(default=False, description="Filter for online delivery support")
     book_table_only: Optional[bool] = Field(default=False, description="Filter for table reservation support")
     provider: Optional[str] = Field(default=None, description="Optional override: 'gemini', 'mock', 'template'")

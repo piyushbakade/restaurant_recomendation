@@ -311,7 +311,7 @@ class RecommendationGenerator:
         if ENABLE_ANTI_HALLUCINATION_GUARDRAILS:
             curated_restaurants = AntiHallucinationGuardrail.validate_and_merge(
                 llm_output=llm_output,
-                candidates=llm_candidate_pool,
+                candidates=candidates,
                 preference=preference,
             )
         else:

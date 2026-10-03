@@ -978,6 +978,225 @@ body {
   text-decoration: underline;
 }
 
+/* View Controls Bar (Toggle Top Picks vs All Recommendations) */
+.view-controls-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 14px 20px;
+  margin-bottom: 24px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-glass);
+  background: rgba(22, 24, 33, 0.7);
+  backdrop-filter: blur(12px);
+  animation: fadeIn 0.3s ease;
+}
+
+.view-mode-tabs {
+  display: flex;
+  gap: 8px;
+  background: rgba(14, 15, 20, 0.7);
+  padding: 4px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-glass);
+}
+
+.view-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-xs);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font-display);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.view-tab:hover {
+  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.view-tab.active {
+  background: linear-gradient(135deg, rgba(226, 55, 68, 0.25) 0%, rgba(203, 32, 45, 0.4) 100%);
+  border-color: rgba(226, 55, 68, 0.6);
+  color: #ffffff;
+  box-shadow: 0 2px 10px rgba(226, 55, 68, 0.25);
+}
+
+.tab-badge {
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-main);
+  font-weight: 700;
+}
+
+.view-tab.active .tab-badge {
+  background: var(--zomato-red);
+  color: #ffffff;
+}
+
+.pagination-info {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+.pagination-info strong {
+  color: var(--text-main);
+}
+
+/* Pagination Navigation Controls (Maximum 6 per page) */
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 32px;
+  margin-bottom: 20px;
+  padding: 16px 20px;
+  flex-wrap: wrap;
+  background: rgba(22, 24, 33, 0.5);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  backdrop-filter: blur(10px);
+}
+
+.page-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  background: rgba(26, 29, 41, 0.8);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-sm);
+  color: var(--text-main);
+  font-family: var(--font-display);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.page-nav-btn:hover:not(:disabled) {
+  background: rgba(226, 55, 68, 0.2);
+  border-color: var(--zomato-red);
+  transform: translateY(-1px);
+}
+
+.page-nav-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.pagination-numbers {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.page-num-btn {
+  min-width: 38px;
+  height: 38px;
+  padding: 0 8px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(26, 29, 41, 0.6);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-xs);
+  color: var(--text-muted);
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.page-num-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-main);
+}
+
+.page-num-btn.active {
+  background: linear-gradient(135deg, #ef4f5f 0%, #e23744 100%);
+  border-color: var(--zomato-red);
+  color: #ffffff;
+  font-weight: 700;
+  box-shadow: 0 2px 12px rgba(226, 55, 68, 0.45);
+}
+
+/* Explore All Options CTA Card */
+.view-all-cta-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 20px 24px;
+  margin-top: 16px;
+  background: linear-gradient(135deg, rgba(226, 55, 68, 0.12) 0%, rgba(22, 24, 33, 0.9) 100%);
+  border: 1px dashed rgba(226, 55, 68, 0.45);
+  border-radius: var(--radius-md);
+  animation: fadeIn 0.4s ease;
+}
+
+.cta-content {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.cta-icon {
+  font-size: 2rem;
+}
+
+.cta-title {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 2px;
+}
+
+.cta-desc {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+.cta-desc strong {
+  color: var(--text-main);
+}
+
+.cta-browse-btn {
+  padding: 10px 20px;
+  background: var(--zomato-red);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(226, 55, 68, 0.35);
+  transition: var(--transition-smooth);
+}
+
+.cta-browse-btn:hover {
+  background: var(--zomato-red-light);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(226, 55, 68, 0.5);
+}
+
 /* Initial Prompt Card (Before User Searches) */
 .initial-prompt-card {
   padding: 56px 28px;
