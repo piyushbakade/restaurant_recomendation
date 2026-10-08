@@ -3,6 +3,7 @@ API Request Handler and Route Controllers for Phase 6.
 Provides schema validation and connects HTTP endpoints to Phase 3-5 recommendation engine.
 """
 import logging
+import time
 from typing import Any, Dict, List, Optional, Union
 from pydantic import BaseModel, Field, field_validator
 
@@ -89,18 +90,56 @@ def handle_recommendations_endpoint(
         "book_table_only": req.book_table_only,
     }
 
-    # 2. Execute end-to-end recommendation pipeline (Phase 3 -> 4 -> 5)
-    response = rec_generator.recommend_from_query(
-        query=query_payload,
-        recommendation_engine=rec_engine,
-        top_k=req.top_k or 5,
-    )
+    # Step 1: Normalization (Phase 3)
+    norm_pref = rec_engine.normalizer.normalize(query_payload)
+    print("\n" + "=" * 80, flush=True)
+    print(">>> [REAL-TIME AI RECOMMENDATION REQUEST RECEIVED]", flush=True)
+    print(f"    Raw Input: location='{req.location}', cuisines={req.cuisines}, budget={req.max_budget}, rating={req.min_rating}, vibe='{req.vibe_or_notes}'", flush=True)
+    print(f"    [STEP 1: NORMALIZATION] Resolved Location: '{norm_pref.resolved_location}' (Cluster: '{norm_pref.resolved_cluster}')", flush=True)
+    print(f"                            Cleaned Cuisines: {norm_pref.cuisines}", flush=True)
+    print(f"                            Validated Budget: Rs. {norm_pref.max_budget:,} | Min Rating: {norm_pref.min_rating}", flush=True)
 
+    # Step 2: Candidate Retrieval (Phase 4A)
+    t0 = time.perf_counter()
+    candidates, was_relaxed, relaxation_notes = rec_engine.retriever.retrieve(
+        preference=norm_pref,
+        pool_limit=25,
+    )
+    t_retrieval = (time.perf_counter() - t0) * 1000
+    print(f"    [STEP 2: RETRIEVAL]     Found {len(candidates)} candidates in {t_retrieval:.2f} ms (Relaxation applied: {was_relaxed})", flush=True)
+
+    # Step 3: Heuristic Ranking (Phase 4B)
+    scored_candidates = rec_engine.ranker.rank(
+        candidates=candidates,
+        preference=norm_pref,
+        top_k=req.top_k or 30,
+    )
+    print(f"    [STEP 3: RANKING]       Scored {len(scored_candidates)} candidates using multi-factor heuristic formula.", flush=True)
+    if scored_candidates:
+        top_preview = ", ".join([f"{s.restaurant.name} ({s.scores.final_score:.2f})" for s in scored_candidates[:3]])
+        print(f"                            Top Candidates: {top_preview}", flush=True)
+
+    # Step 4 & 5: LLM Reasoning & Prompt Synthesis (Phase 5)
+    print(f"    [STEP 4: LLM PROMPT]    Packaging top candidates in XML guardrails for {rec_generator.provider_name}...", flush=True)
+    t1 = time.perf_counter()
+    response = rec_generator.generate(
+        preference=norm_pref,
+        candidates=scored_candidates,
+        was_relaxed=was_relaxed,
+        relaxation_notes=relaxation_notes,
+        total_candidates_found=len(candidates),
+    )
+    t_llm = (time.perf_counter() - t1) * 1000
+    print(f"    [STEP 5: AI RATIONALES] Generated in {t_llm:.2f} ms ({len(response.recommendations)} recommendations curated).", flush=True)
+
+    # Step 6: Contract Schema Formatting (Phase 7)
     from phase_7.formatter import ResponseFormatter
     formatted = ResponseFormatter.from_phase5_response(
         response,
         provider_name=rec_generator.provider_name,
     )
+    print(f"    [STEP 6: CONTRACT DONE] Standardized contract formatted. Sending HTTP 200 payload to client.", flush=True)
+    print("=" * 80 + "\n", flush=True)
     return formatted.model_dump()
 
 
